@@ -1,6 +1,15 @@
 import org.apache.kafka.clients.producer._
 import java.util.Properties
+import twitter4j._
+import twitter4j.conf._
 
+
+
+case class Twitter(account: Account, keywords: String*) {
+
+  def getTwitterStream: TwitterStream = new TwitterStreamFactory(account.getConfiguration.build).getInstance()
+
+}
 
 object KafkaProducer extends App {
 
@@ -19,14 +28,14 @@ object KafkaProducer extends App {
   val producer = new KafkaProducer[String, String](prop)
 
   // 模拟一些数据并发送给kafka
-  for (i <- 1 to 100) {
-    val msg = s"${i}: this is a linys ${i} kafka data"
-    println("send -->" + msg)
-    // 得到返回值
-    val rmd: RecordMetadata = producer.send(new ProducerRecord[String, String]("linys", msg)).get()
-    println(rmd.toString)
-    Thread.sleep(500)
-  }
+//  for (i <- 1 to 100) {
+//    val msg = s"${i}: this is a linys ${i} kafka data"
+//    println("send -->" + msg)
+//    // 得到返回值
+//    val rmd: RecordMetadata = producer.send(new ProducerRecord[String, String]("linys", msg)).get()
+//    println(rmd.toString)
+//    Thread.sleep(500)
+//  }
 
   producer.close()
 
