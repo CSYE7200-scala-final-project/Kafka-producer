@@ -1,15 +1,8 @@
 import org.apache.kafka.clients.producer._
 import java.util.Properties
-import twitter4j._
-import twitter4j.conf._
+import java.util.ArrayList
 
-
-
-case class Twitter(account: Account, keywords: String*) {
-
-  def getTwitterStream: TwitterStream = new TwitterStreamFactory(account.getConfiguration.build).getInstance()
-
-}
+import twitter4j.{Query, QueryResult, Status, TwitterException}
 
 object KafkaProducer extends App {
 
@@ -27,6 +20,8 @@ object KafkaProducer extends App {
   // 得到生产者的实例
   val producer = new KafkaProducer[String, String](prop)
 
+  val account = Account("", "", "", "")
+  val twitter = Twitters(account, "")
   // 模拟一些数据并发送给kafka
 //  for (i <- 1 to 100) {
 //    val msg = s"${i}: this is a linys ${i} kafka data"
@@ -36,6 +31,32 @@ object KafkaProducer extends App {
 //    println(rmd.toString)
 //    Thread.sleep(500)
 //  }
+  val query = new Query(twitter.keywords)
+  val numberOfTweets = 5000;
+  var lastID = Long.MaxValue;
+  val tweets = new ArrayList[Status]();
+  while (tweets.size () < numberOfTweets) {
+    if (numberOfTweets - tweets.size() > 100)
+      query.setCount(100);
+    else
+      query.setCount(numberOfTweets - tweets.size());
+    try {
+      val result = twitter.tweets.search(query)
+      tweets.addAll(result.getTweets());
+      print("Gathered " + tweets.size() + " tweets" + "\n");
+      tweets.forEach(tweet => if (tweet.getId < lastID) lastID = tweet.getUser)
+    }
+
+    catch {
+      case e: TwitterException => {
+        System.err.println("Couldn't connect: " + e)
+        e.printStackTrace()
+      }
+
+        query.setMaxId(lastID - 1);
+    }
+  }
+//   tweet.getUser.getStatus.getText
 
   producer.close()
 
