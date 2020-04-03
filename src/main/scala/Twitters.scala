@@ -1,10 +1,63 @@
 import java.util.concurrent.LinkedBlockingQueue
 
-import twitter4j.{StallWarning, Status, StatusDeletionNotice, StatusListener, Twitter, TwitterFactory, TwitterStream, TwitterStreamFactory}
+import twitter4j.{JSONObject, Query, StallWarning, Status, StatusDeletionNotice, StatusListener, Twitter, TwitterFactory, TwitterStream, TwitterStreamFactory}
 
-case class Twitters(account: Account, keywords: String*) {
+import scala.collection.mutable.ListBuffer
+import scala.jdk.CollectionConverters._
+import scala.util.{Failure, Success, Try}
+
+case class Twitters(account: Account, hashtag: String) {
 
   lazy val queue: LinkedBlockingQueue[Status] = new LinkedBlockingQueue[Status](1000)
+  lazy val tweets: Twitter = new TwitterFactory(account.getConfiguration.build).getInstance
+  lazy val searchResult = ListBuffer[Status]()
+
+  def searchN(n: Int = 1) = {
+    val query = new Query(s"#$hashtag")
+    val numberOfTweets = n
+    var lastID = Long.MaxValue
+    while (searchResult.length < numberOfTweets) {
+      if (numberOfTweets - searchResult.length > 100)
+        query.setCount(100);
+      else
+        query.setCount(numberOfTweets - searchResult.length)
+      val response = Try(tweets.search(query))
+      response match {
+        case Failure(e) => {
+          System.err.println("Couldn't connect: " + e)
+          e.printStackTrace()
+        }
+        case Success(t) => {
+          searchResult ++= t.getTweets.asScala
+          print("Gathered " + searchResult.length + " tweets" + "\n");
+        }
+      }
+    }
+  }
+
+  def dropAll = searchResult.clear
+  def dropN = ???
+  def toJson = {
+    val total: ListBuffer[JSONObject] = ListBuffer[JSONObject]()
+    for (t <- searchResult) {
+      val tObject = new JSONObject()
+      tObject.put("userId", t.getId)
+        .put("userScreenName", t.getUser.getScreenName)
+        .put("userName", t.getUser.getName)
+        .put("timestamp", t.getCreatedAt)
+        .put("favorite", t.getFavoriteCount)
+        .put("location", t.getGeoLocation)
+        .put("retweet", t.getRetweetCount)
+        .put("hashtag", t.getHashtagEntities.toString)
+        .put("all", t.toString)
+      total.addOne(tObject)
+    }
+    total
+  }
+
+  def filter = ??? //keywords, and, or, without
+
+
 //  lazy val listener: StatusListener = new StatusListener() {
 //
 //    @Override
@@ -49,6 +102,6 @@ case class Twitters(account: Account, keywords: String*) {
 //    }
 //  }
 
-  lazy val tweets: Twitter = new TwitterFactory(account.getConfiguration.build).getInstance()
+
 //    .addListener(listener)
 }

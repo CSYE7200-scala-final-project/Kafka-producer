@@ -10,5 +10,7 @@ libraryDependencies += "org.twitter4j" % "twitter4j-core" % "4.0.7"
 libraryDependencies += "org.twitter4j" % "twitter4j-stream" % "4.0.7"
 // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
 libraryDependencies += "org.apache.kafka" % "kafka-clients" % "2.4.1"
+// https://mvnrepository.com/artifact/org.json/json
+libraryDependencies += "org.json" % "json" % "20190722"
 
 
