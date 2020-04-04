@@ -6,13 +6,13 @@ import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
-case class Twitters(account: Account, hashtag: String) {
+case class Twitters(account: Account) {
 
   lazy val queue: LinkedBlockingQueue[Status] = new LinkedBlockingQueue[Status](1000)
   lazy val tweets: Twitter = new TwitterFactory(account.getConfiguration.build).getInstance
   lazy val searchResult = ListBuffer[Status]()
 
-  def searchN(n: Int = 1) = {
+  def searchN(n: Int = 1, hashtag: String) = {
     val query = new Query(s"#$hashtag")
     val numberOfTweets = n
     var lastID = Long.MaxValue

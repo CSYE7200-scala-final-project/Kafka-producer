@@ -13,9 +13,9 @@ object KafkaProducer extends App {
 
   val kfk = Kafka(m)
   val account = Account("", "", "", "")
-  val twitter = Twitters(account, "")
+  val twitter = Twitters(account)
 
-  twitter.searchN(1)
+  twitter.searchN(1, "")
   val ResultToJson: ListBuffer[JSONObject] = twitter.toJson
 
   kfk.sendList("tweets_of_Coronavir", ResultToJson.toList)
