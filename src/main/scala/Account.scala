@@ -6,7 +6,7 @@ case class Account(consumerKey: String, consumerSecret: String, accessToken: Str
     cb.setDebugEnabled(true)
       .setOAuthConsumerKey(consumerKey)
       .setOAuthConsumerSecret(consumerSecret)
-      .setOAuth2AccessToken(accessToken)
+      .setOAuthAccessToken(accessToken)
       .setOAuthAccessTokenSecret(accessTokenSecret)
   }
 }

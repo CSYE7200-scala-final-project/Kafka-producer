@@ -10,14 +10,13 @@ case class Kafka() {
   def sendList[T](topic: String, list: List[T]): Unit = {
     for (l <- list) {
       println(s"send --> ${l.toString} to $topic")
-      // 得到返回值
       val rmd: RecordMetadata = producer.send(new ProducerRecord[String, String](topic, l.toString)).get()
       println(rmd.toString)
       Thread.sleep(500)
     }
   }
 
-  def close = producer.close()
+  def close = producer.close
 }
 
 object Kafka {

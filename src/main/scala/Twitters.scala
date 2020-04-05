@@ -14,6 +14,7 @@ case class Twitters(account: Account) {
 
   def searchN(n: Int = 1, hashtag: String) = {
     val query = new Query(s"#$hashtag")
+    query.setLang("en")
     val numberOfTweets = n
     var lastID = Long.MaxValue
     while (searchResult.length < numberOfTweets) {
@@ -46,9 +47,9 @@ case class Twitters(account: Account) {
         .put("userName", t.getUser.getName)
         .put("timestamp", t.getCreatedAt)
         .put("favorite", t.getFavoriteCount)
-        .put("location", t.getGeoLocation)
         .put("retweet", t.getRetweetCount)
-        .put("hashtag", t.getHashtagEntities.toString)
+        .put("hashtag", t.getHashtagEntities.toSet)
+        .put("text", t.getText)
         .put("all", t.toString)
       total.addOne(tObject)
     }
