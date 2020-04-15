@@ -54,7 +54,6 @@ case class Twitters(account: Account) {
         .put("source" , t.getSource )
         .put("in_reply_to_status_id",t.getInReplyToStatusId)
         .put("is_quote_status" , t.getQuotedStatus )
-        .put("is_retweeted" , t.getRetweetedStatus )
         .put("latitude",   Try(t.getGeoLocation.getLatitude).getOrElse(""))
         .put("longitude",  Try( t.getGeoLocation.getLongitude).getOrElse(""))
         .put("country" ,   Try (t.getPlace.getCountry).getOrElse())

@@ -9,10 +9,10 @@ case class Kafka() {
 
   def sendList[T](topic: String, list: List[T]): Unit = {
     for (l <- list) {
-      println(s"send --> ${l.toString} to $topic")
+      //println(s"send --> ${l.toString} to $topic")
       val rmd: RecordMetadata = producer.send(new ProducerRecord[String, String](topic, l.toString)).get()
-      println(rmd.toString)
-      Thread.sleep(500)
+     // println(rmd.toString)
+     // Thread.sleep(500)
     }
   }
 

@@ -13,8 +13,8 @@ libraryDependencies += "org.apache.kafka" % "kafka-clients" % "2.4.1"
 // https://mvnrepository.com/artifact/org.json/json
 libraryDependencies += "org.json" % "json" % "20190722"
 // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.0-alpha1" % Test
-
+//libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.0-alpha1" % Test
+//libraryDependencies += "log4j" % "log4j" % "1.2.17"
 
 
 
